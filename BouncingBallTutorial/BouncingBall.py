@@ -6,9 +6,18 @@ screen = pew.Pix()
 x, y = 3, 0
 dx, dy = 1, 1
 
+background = pew.Pix.from_iter(((1, 0, 1, 0, 1, 0, 1, 0),
+                                (0, 1, 0, 1, 0, 1, 0, 1),
+                                (1, 0, 1, 0, 1, 0, 1, 0),
+                                (0, 1, 0, 1, 0, 1, 0, 1),
+                                (1, 0, 1, 0, 1, 0, 1, 0),
+                                (0, 1, 0, 1, 0, 1, 0, 1),
+                                (1, 0, 1, 0, 1, 0, 1, 0),
+                                (0, 1, 0, 1, 0, 1, 0, 1),))
+
 while True:
     keys = pew.keys()
-    screen.pixel(x,y,0)
+    screen.blit(background)
 
     if x + dx > 7 or x + dx < 0 or keys & pew.K_O:
         dx = -dx
