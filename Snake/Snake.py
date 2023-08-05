@@ -18,13 +18,25 @@ background = pew.Pix.from_iter(((0, 0, 0, 0, 0, 0, 0, 0),
                                 (0, 0, 0, 0, 0, 0, 0, 0),
                                 (0, 0, 0, 0, 0, 0, 0, 0),))
 
+end = pew.Pix.from_iter(((1, 0, 1, 0, 1, 0, 1, 0),
+                         (0, 1, 0, 1, 0, 1, 0, 1),
+                         (1, 0, 1, 0, 1, 0, 1, 0),
+                         (0, 1, 0, 1, 0, 1, 0, 1),
+                         (1, 0, 1, 0, 1, 0, 1, 0),
+                         (0, 1, 0, 1, 0, 1, 0, 1),
+                         (1, 0, 1, 0, 1, 0, 1, 0),
+                         (0, 1, 0, 1, 0, 1, 0, 1),))
+
 food = (random.randint(0, 7), random.randint(0, 7))
 speed = 1
 
 
 while True:
-    # Draw the snake
+    # Draw the food
     screen.blit(background)
+    screen.pixel(food[0], food[1], 1)
+    
+    # Draw the snake
     for index, element in enumerate(snake):
         if (index != 0):
             screen.pixel(element[0], element[1], 3)
@@ -32,27 +44,38 @@ while True:
             screen.pixel(element[0], element[1], 3 if blink == True else 2)
             blink = not blink
 
-    screen.pixel(food[0], food[1], 1)
-
     # User Input
     keys = pew.keys()
-    if keys & pew.K_UP:
+    if (keys & pew.K_UP) and (dy != 1):
         dx = 0
         dy = -1
-    elif keys & pew.K_DOWN:
+    elif (keys & pew.K_DOWN) and (dy != -1):
         dx = 0
         dy = 1
-    elif keys & pew.K_LEFT:
+    elif (keys & pew.K_LEFT) and (dx != 1):
         dx = -1
         dy = 0
-    elif keys & pew.K_RIGHT:
+    elif (keys & pew.K_RIGHT) and (dx != 1):
         dx = 1
         dy = 0
 
-    # Update the snake's coordinates
+    # Check if the snake is eating
     head = snake[0]
-    snake.insert(0, (head[0] + dx, head[1] + dy))
-    snake.pop()
+    if head != food:
+        snake.pop()
+    else:
+        food = (random.randint(0, 7), random.randint(0, 7)) 
+        speed = speed * 1.1
+
+    snake.insert(0, ((head[0] + dx) % 8, (head[1] + dy) % 8))
+    head = snake[0]
+    if head in snake[1:]:
+        break
 
     pew.show(screen)
-    pew.tick(1/1)
+    pew.tick(1/speed)
+
+while True:
+    screen.blit(end)
+    pew.show(screen)
+    pew.tick(1)
